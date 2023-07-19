@@ -1,7 +1,12 @@
 function camelize(str) {
-  let f = str
-  .split("-")
-  .map(item => item.slice(0, 1).toUpperCase() + item.slice(1))
-  .join("")
-  return f.slice(0, 1).toLowerCase() + f.slice(1)
+  return str
+    .split("-")
+    .map((part, index) => {
+      if (index === 0) {
+        return part
+      } else {
+        return part.slice(0, 1).toUpperCase() + part.slice(1)
+      }
+    })
+    .join("");
 }
