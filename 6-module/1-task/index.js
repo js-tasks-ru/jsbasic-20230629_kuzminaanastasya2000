@@ -5,64 +5,59 @@
  * Пример одного элемента, описывающего строку таблицы
  *
  *      {
- *          name: 'Ilia',
- *          age: 25,
- *          salary: '1000',
- *          city: 'Petrozavodsk'
- *      }
+     *          name: 'Ilia',
+     *          age: 25,
+     *          salary: '1000',
+     *          city: 'Petrozavodsk'
+     *      },
  *
  */
 export default class UserTable {
-  #rows;
-  #elem;
-  constructor(rows){
-    this.#rows = rows;
-    this.#elem = document.querySelector('table');
-    this.addRows();
-  }
-  get elem(){
-    return this.#elem;
-  }
-  addRows(){
-    let structure = `
-    <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Возраст</th>
-            <th>Зарплата</th>
-            <th>Город</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>` + this.#rows.map(e => `
-    <tr>
-       <td>${e.name}</td>
-       <td>${e.age}</td>
-       <td>${e.salary}</td>
-       <td>${e.city}</td>
-       <td><button>X</button></td>
-    </tr>
-    `).join("") + `</tbody>`
-    this.#elem.innerHTML = structure;
-    for(let b of this.elem.querySelectorAll('button')){
-      b.addEventListener('click', this);
-    }
-  }
-  handleEvent(event){
-    let row = event.target.parentElement.parentElement;
-    this.#rows.splice(row.rowIndex - 1, 1);
-    row.remove()
-  }
-}
+  constructor(rows) {
+    this.elem = document.createElement('table');
 
-/*export default function makeTable(rows) {
-  let table = document.createElement("table");
-  let tr = document.createElement("tr");
-  let td1 = document.createElement("td");
-  let td2 = document.createElement("td");
-  td1.innerHTML = 'fkfkf';
-  td2.innerHTML = 'f[f[]]';
-  tr.append(td1);
-  tr.append(td2);
-  table.append(tr);
-}*/
+    this.elem.innerHTML = `
+      <thead>
+          <tr>
+            <td>Имя</td>
+            <td>Возраст</td>
+            <td>Зарплата</td>
+            <td>Город</td>
+            <td></td>
+          </tr>
+      </thead>
+    `;
+
+    let tableInner = rows.map(row => {
+      let cellsWithData = Object.values(row) // для каждого значения из объекта row
+        .map(value => `<td>${value}</td>`) // обернуть его в <td>
+        .join(''); // полученный массив <td>...</td> объединить в одну строку
+
+      return `
+          <tr>
+            ${cellsWithData}
+            <td><button>X</button></td>
+          </tr>
+        `; // возвращаем верстку одной строки
+    }).join('');
+
+    this.elem.innerHTML += `
+      <tbody>
+        ${tableInner}
+      <tbody>
+    `; // оборачиваем полученные строчки в tbody
+
+    this.elem.addEventListener('click', (event) => this.onClick(event));
+  }
+
+  onClick(event) {
+    if (event.target.tagName != 'BUTTON') {
+      return;
+    }
+
+    let tr = event.target.closest('tr');
+
+    tr.remove();
+  }
+
+}
