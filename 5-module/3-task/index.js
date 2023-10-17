@@ -1,48 +1,40 @@
 function initCarousel() {
+  let carouselInner = document.querySelector('.carousel__inner');
+  let buttonNext = document.querySelector('.carousel__arrow_right');
+  let buttonBack = document.querySelector('.carousel__arrow_left');
+  let elem = document.querySelector('[data-carousel-holder]');
   let currentSlideNumber = 0;
   let slidesAmount = 4;
-  let elem = document.querySelector('[data-carousel-holder]');
-
-  let carouselInnerElem = elem.querySelector('.carousel__inner');
-  let carouselArrowRight = elem.querySelector('.carousel__arrow_right');
-  let carouselArrowLeft = elem.querySelector('.carousel__arrow_left');
-
-  update();
-
+  update()
   elem.onclick = ({target}) => {
-    if (target.closest('.carousel__arrow_right')) {
-      next();
+    if(target.closest('.carousel__arrow_right')){
+      next()
     }
-
-    if (target.closest('.carousel__arrow_left')) {
-      prev();
+    if(target.closest('.carousel__arrow_left')){
+      back()
     }
-  };
-
+  }
   function next() {
     currentSlideNumber++;
-    update();
+    update()
   }
-
-  function prev() {
+  function back() {
     currentSlideNumber--;
-    update();
+    update()
   }
-
   function update() {
-    let offset = -carouselInnerElem.offsetWidth * currentSlideNumber;
-    carouselInnerElem.style.transform = `translateX(${offset}px)`;
-
+    let slideWidth = -carouselInner.offsetWidth * currentSlideNumber;
+    carouselInner.style.transform = `translateX(${slideWidth}px)`;
     if (currentSlideNumber == slidesAmount - 1) {
-      carouselArrowRight.style.display = 'none';
+      buttonNext.style.display = 'none'
     } else {
-      carouselArrowRight.style.display = '';
+      buttonNext.style.display = ''
     }
-
     if (currentSlideNumber == 0) {
-      carouselArrowLeft.style.display = 'none';
-    } else {
-      carouselArrowLeft.style.display = '';
+      buttonBack.style.display = 'none'
+    } else if (currentSlideNumber > 0){
+      buttonBack.style.display = ''
     }
   }
 }
+
